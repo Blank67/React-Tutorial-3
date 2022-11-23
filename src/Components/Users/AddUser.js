@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import React, { Fragment, useState } from 'react';
 import Button from "../UI/Button";
 import Card from "../UI/Card";
 import ErrorModal from "../UI/ErrorModal";
@@ -41,7 +41,7 @@ const AddUser = (props) => {
     };
 
     return (
-        //We can user Wrapper Component(User created component that return props.children), <> </>, React.Fragment instead of <div> </div> as they don't actually load onn our DOM.
+        //We can use Wrapper Component(User created component that return props.children), <> </>, React.Fragment instead of <div> </div> as they don't actually load on our DOM.
         <Fragment> 
             {error && <ErrorModal title={error.title} message={error.message} onClick={errorHandler} />}
             <Card className={css.input}>

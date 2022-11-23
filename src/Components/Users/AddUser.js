@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useRef, useState } from 'react';
 import Button from "../UI/Button";
 import Card from "../UI/Card";
 import ErrorModal from "../UI/ErrorModal";
@@ -6,18 +6,16 @@ import css from "./AddUser.module.css";
 
 const AddUser = (props) => {
 
-    const [enteredUserName, setEnteredUserName] = useState('');
-    const [enteredUserAge, setEnteredUserAge] = useState('');
+    const nameInputRef = useRef();
+    const ageInputRef = useRef();
+    // const [enteredUserName, setEnteredUserName] = useState('');
+    // const [enteredUserAge, setEnteredUserAge] = useState('');
     const [error, setError] = useState();
 
-    const enteredUserNameChnageHandler = (e) => {
-        setEnteredUserName(e.target.value);
-    };
-    const enteredUserAgeChnageHandler = (e) => {
-        setEnteredUserAge(e.target.value);
-    };
     const addUserHandler = (event) => {
         event.preventDefault();
+        const enteredUserName = nameInputRef.current.value;
+        const enteredUserAge = ageInputRef.current.value;
         if (enteredUserAge.trim().length === 0 || enteredUserName.trim().length === 0) {
             setError({
                 title: "Invalid Input",
@@ -25,7 +23,7 @@ const AddUser = (props) => {
             });
             return;
         }
-        if (enteredUserAge < 1) {
+        if (+enteredUserAge < 1) { //+ is used to forcefully convert string to int so we can compare. (Without + will also work but it's just good practice)
             setError({
                 title: "Invalid Age",
                 message: "Age should be greater than 0."
@@ -33,8 +31,8 @@ const AddUser = (props) => {
             return;
         }
         props.onAdd(enteredUserName, enteredUserAge);
-        setEnteredUserName('');
-        setEnteredUserAge('');
+        nameInputRef.current.value = ''; //We can do this as we don't need previous state OR we are not changing DOM OR we are just reading otherwise we would have use states.
+        ageInputRef.current.value = '';
     };
     const errorHandler = () => {
         setError(null);
@@ -47,10 +45,10 @@ const AddUser = (props) => {
             <Card className={css.input}>
                 <form onSubmit={addUserHandler}>
                     <label htmlFor="username">Name:</label>
-                    <input id="username" type="text" value={enteredUserName} onChange={enteredUserNameChnageHandler} />
+                    <input id="username" type="text" ref={nameInputRef} />
                     <label htmlFor="userage">Age (in Years):</label>
-                    <input id="userage" type="number" value={enteredUserAge} onChange={enteredUserAgeChnageHandler} />
-                    <Button type="submit" name={enteredUserName} age={enteredUserAge}>Add</Button>
+                    <input id="userage" type="number" ref={ageInputRef} />
+                    <Button type="submit" >Add</Button>
                 </form>
             </Card>
         </Fragment>
